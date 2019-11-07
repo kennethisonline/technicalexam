@@ -139,6 +139,12 @@
 
     <h2>Employee Details</h2>
 
+    <div style="margin: 10px;">
+        <button th:if="${isAdmin} == true" type="submit" class="btn btn-primary">Save</button>
+        <a th:if="${isAdmin} == true" th:href="${'/employee/delete/' + employee.employeeID}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
+        <a href="/employees" class="btn btn-primary" role="button" aria-pressed="true">Back to Employees</a>
+    </div>
+
     <form th:object="${employee}" th:action="@{/employee/save}" method="post">
 
         <div class="row">
@@ -146,23 +152,23 @@
                 <input type="hidden" th:field="*{employeeID}" />
                 <div class="form-group">
                     <label>First Name</label>
-                    <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name">
+                    <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name" th:disabled="${isAdmin} == false">
                 </div>
                 <div class="form-group">
                     <label>Last Name</label>
-                    <input type="text" th:field="*{lastName}" class="form-control" placeholder="Last Name">
+                    <input type="text" th:field="*{lastName}" class="form-control" placeholder="Last Name" th:disabled="${isAdmin} == false">
                 </div>
                 <div class="form-group">
                     <label>Middle Name</label>
-                    <input type="text" th:field="*{middleName}" class="form-control" placeholder="Last Name">
+                    <input type="text" th:field="*{middleName}" class="form-control" placeholder="Last Name" th:disabled="${isAdmin} == false">
                 </div>
                 <div class="form-group">
                     <label>Birth Date</label>
-                    <input type="date" id="birthDate" name="birthDate" th:value="*{birthDate}" class="form-control" placeholder="Birth Date">
+                    <input type="date" id="birthDate" name="birthDate" th:value="*{birthDate}" class="form-control" placeholder="Birth Date" th:disabled="${isAdmin} == false">
                 </div>
                 <div class="form-group">
                     <label>Gender</label>
-                    <select th:field="*{gender}" class="form-control">
+                    <select th:field="*{gender}" class="form-control" th:disabled="${isAdmin} == false">
                         <option value=""></option>
                         <option th:value="M" th:text="Male"></option>
                         <option th:value="F" th:text="Female"></option>
@@ -170,7 +176,7 @@
                 </div>
                 <div class="form-group">
                     <label>Marital Status</label>
-                    <select th:field="*{maritalStatus}" class="form-control">
+                    <select th:field="*{maritalStatus}" class="form-control" th:disabled="${isAdmin} == false">
                         <option value=""></option>
                         <option th:value="Single" th:text="Single"></option>
                         <option th:value="Married" th:text="Married"></option>
@@ -181,17 +187,17 @@
                 </div>
                 <div class="form-group">
                     <label>Position</label>
-                    <input type="text" th:field="*{position}" class="form-control" placeholder="Position">
+                    <input type="text" th:field="*{position}" class="form-control" placeholder="Position" th:disabled="${isAdmin} == false">
                 </div>
                 <div class="form-group">
                     <label>Date Hired</label>
-                    <input type="date" id="dateHired" name="dateHired" th:value="*{dateHired}" class="form-control" placeholder="Date Hired">
+                    <input type="date" id="dateHired" name="dateHired" th:value="*{dateHired}" class="form-control" placeholder="Date Hired" th:disabled="${isAdmin} == false">
                 </div>
             </div>
             <div class="col-sm">
                 <div class="container" id="addContactContainer">
                     <h5>Contact Details</h5>
-                    <a href="#" id="addContact">Add New Contact</a>
+                    <a th:if="${isAdmin} == true" href="#" id="addContact">Add New Contact</a>
                     <input type="hidden" id="contactInfoRowCnt" value="1">
                     <div class="row" style="margin: 10px;">
                         <div class="col-sm">Value</div>
@@ -199,14 +205,14 @@
                     </div>
                     <div class="row" th:each="contactInfo : ${employee.contactInfoDTOList}" th:id="${'contactInfoExRow_' + contactInfo.contactInfoID}" style="margin: 10px;">
                         <div class="col-sm">
-                            <input type="text" th:name="${'contactInfo_' + contactInfo.contactInfoID}" th:value="${contactInfo.value}">
+                            <input type="text" th:name="${'contactInfo_' + contactInfo.contactInfoID}" th:value="${contactInfo.value}" th:disabled="${isAdmin} == false">
                         </div>
                         <div class="col-sm">
-                            <input class="form-check-input" type="radio" name="primaryContact" th:value="${contactInfo.contactInfoID}" th:checked="${contactInfo.primary}" style="margin-left: 10px;">
-                            <button type="button" class="btn btn-danger btn-sm deleteExistingContactButton" th:attr="data-contactrow=${contactInfo.contactInfoID}" style="margin-left: 40px;">X</button>
+                            <input class="form-check-input" type="radio" name="primaryContact" th:value="${contactInfo.contactInfoID}" th:checked="${contactInfo.primary}" style="margin-left: 10px;"  th:disabled="${isAdmin} == false">
+                            <button th:if="${isAdmin} == true" type="button" class="btn btn-danger btn-sm deleteExistingContactButton" th:attr="data-contactrow=${contactInfo.contactInfoID}" style="margin-left: 40px;">X</button>
                         </div>
                     </div>
-                    <div class="row" th:id="contactInfoNewRow_1" style="margin: 10px;">
+                    <div th:if="${isAdmin} == true" class="row" th:id="contactInfoNewRow_1" style="margin: 10px;">
                         <div class="col-sm">
                             <input type="text" class="contactInfoNewRowValueField" name="contactInfoNew_1" id="contactInfoNew_1" value="">
                         </div>
@@ -219,7 +225,7 @@
                 <div class="container" id="addAddressContainer">
                     <h5>Address Info</h5>
                     <input type="hidden" id="addressInfoRowCnt" value="1">
-                    <a href="#" id="addAddress">Add New Address</a>
+                    <a th:if="${isAdmin} == true" href="#" id="addAddress">Add New Address</a>
                     <div class="row" style="margin: 10px;">
                         <div class="col-sm-5">Address 1</div>
                         <div class="col-sm-5">Address 2</div>
@@ -227,17 +233,17 @@
                     </div>
                     <div class="row" th:each="addressInfo : ${employee.addressInfoDTOList}" th:id="${'addressInfoExistingRow_' + addressInfo.addressInfoID}" style="margin: 10px;">
                         <div class="col-sm-5">
-                            <input type="text" th:name="${'addressInfo_address1_' + addressInfo.addressInfoID}" th:value="${addressInfo.address1}">
+                            <input type="text" th:name="${'addressInfo_address1_' + addressInfo.addressInfoID}" th:value="${addressInfo.address1}" th:disabled="${isAdmin} == false">
                         </div>
                         <div class="col-sm-5">
-                            <input type="text" th:name="${'addressInfo_address2_' + addressInfo.addressInfoID}" th:value="${addressInfo.address2}">
+                            <input type="text" th:name="${'addressInfo_address2_' + addressInfo.addressInfoID}" th:value="${addressInfo.address2}" th:disabled="${isAdmin} == false">
                         </div>
                         <div class="col-sm-2">
-                            <input class="form-check-input" type="radio" name="primaryAddress" th:value="${addressInfo.addressInfoID}" th:checked="${addressInfo.primary}" style="margin-left: 5px;">
-                            <button type="button" class="btn btn-danger btn-sm deleteExistingAddressButton" th:attr="data-addressrow=${addressInfo.addressInfoID}" style="float: right;">X</button>
+                            <input class="form-check-input" type="radio" name="primaryAddress" th:value="${addressInfo.addressInfoID}" th:checked="${addressInfo.primary}" style="margin-left: 5px;" th:disabled="${isAdmin} == false">
+                            <button th:if="${isAdmin} == true" type="button" class="btn btn-danger btn-sm deleteExistingAddressButton" th:attr="data-addressrow=${addressInfo.addressInfoID}" style="float: right;">X</button>
                         </div>
                     </div>
-                    <div class="row" id="addressInfoNewRow_1" style="margin: 10px;">
+                    <div th:if="${isAdmin} == true" class="row" id="addressInfoNewRow_1" style="margin: 10px;">
                         <div class="col-sm-5">
                             <input type="text" class="addressInfoNewRowAddress1" name="addressInfoNewRow_address1_1" id="addressInfoNewRow_address1_1">
                         </div>
@@ -253,7 +259,11 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-default">Submit</button>
+        <div style="margin: 10px;">
+            <button th:if="${isAdmin} == true" type="submit" class="btn btn-primary">Save</button>
+            <a th:if="${isAdmin} == true" th:href="${'/employee/delete/' + employee.employeeID}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
+            <a href="/employees" class="btn btn-primary" role="button" aria-pressed="true">Back to Employees</a>
+        </div>
     </form>
 
 </div>

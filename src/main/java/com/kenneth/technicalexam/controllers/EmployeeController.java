@@ -12,6 +12,9 @@ import com.kenneth.technicalexam.repositories.ContactInfoRepository;
 import com.kenneth.technicalexam.repositories.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -55,6 +58,12 @@ public class EmployeeController {
                 .map(e -> new EmployeeListItemDTO(e))
                 .collect(Collectors.toList());
         model.addAttribute("employees", employeeListItemDTOList);
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN") || r.getAuthority().equals("ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+
         return "employeeList";
     }
 
@@ -67,6 +76,12 @@ public class EmployeeController {
     @GetMapping("/employee/{id}")
     public String showEmployeeDetail(@PathVariable Integer id, Model model) {
         model.addAttribute("employee", new EmployeeDetailDTO(employeeRepository.findById(id).orElse(new Employee())));
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN") || r.getAuthority().equals("ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+
         return "employeeDetail";
     }
 

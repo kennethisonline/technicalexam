@@ -8,7 +8,7 @@
 
 <div class="container">
     <h2 style="padding: 5px;">Employees</h2>
-    <a href="/employee/new" style="padding: 5px;">Add Employee</a>
+    <a th:if="${isAdmin} == true" href="/employee/new" style="padding: 5px;">[ Add Employee ]</a>
     <table class="table">
         <tr>
             <th>Name</th>
@@ -25,8 +25,8 @@
             <td th:text="${employee.primaryContact}">Primary Contact</td>
             <td th:text="${employee.age}">Age</td>
             <td th:text="${employee.yearsInTheCompany}">Years in the Company</td>
-            <td><a th:href="${'/employee/' + employee.employeeID}">Edit</a></td>
-            <td><a th:href="${'/employee/delete/' + employee.employeeID}">Delete</a></td>
+            <td><a th:href="${'/employee/' + employee.employeeID}">[ View / Edit ]</a></td>
+            <td><a th:if="${isAdmin} == true" th:href="${'/employee/delete/' + employee.employeeID}">[ Delete ]</a></td>
         </tr>
     </table>
 </div>
