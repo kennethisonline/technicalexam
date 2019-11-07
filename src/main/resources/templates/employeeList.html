@@ -1,0 +1,35 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employees</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+</head>
+<body>
+
+<div class="container">
+    <h2 style="padding: 5px;">Employees</h2>
+    <a href="/employee/new" style="padding: 5px;">Add Employee</a>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Contact Info</th>
+            <th>Age</th>
+            <th>Years in the Company</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr th:each="employee : ${employees}">
+            <td th:text="${employee.name}">Name</td>
+            <td th:text="${employee.primaryAddress}">Primary Address</td>
+            <td th:text="${employee.primaryContact}">Primary Contact</td>
+            <td th:text="${employee.age}">Age</td>
+            <td th:text="${employee.yearsInTheCompany}">Years in the Company</td>
+            <td><a th:href="${'/employee/' + employee.employeeID}">Edit</a></td>
+            <td><a th:href="${'/employee/delete/' + employee.employeeID}">Delete</a></td>
+        </tr>
+    </table>
+</div>
+
+</body>
+</html>

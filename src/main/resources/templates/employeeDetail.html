@@ -1,0 +1,262 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Detail</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<!--    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>-->
+
+    <script
+            src="https://code.jquery.com/jquery-3.4.1.min.js"
+            integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#addContact').click(function(event) {
+                event.preventDefault();
+                console.log('addContact clicked!');
+                var contactInfoCnt = $('#contactInfoRowCnt');
+                var newRowCnt = 1;
+                var currRowCnt = 1;
+                console.log('contactInfoCnt: ' + JSON.stringify(contactInfoCnt));
+                if (contactInfoCnt) {
+                    currRowCnt = parseInt(contactInfoCnt.val());
+                    console.log('currRowCnt: ' + currRowCnt);
+                    newRowCnt = currRowCnt + 1;
+                    console.log('newRowCnt: ' + newRowCnt);
+                    contactInfoCnt.val(newRowCnt);
+                }
+
+                console.log('to be cloned: ' + '#contactInfoNewRow_' + currRowCnt);
+
+                var newRowClone = $('#contactInfoNewRow_' + currRowCnt).clone();
+
+                newRowClone.attr('id', 'contactInfoNewRow_' + newRowCnt);
+                newRowClone.find('.deleteNewContactButton').each(function() {
+                    $(this).attr('data-contactrow', 'contactInfoNewRow_' + newRowCnt);
+                    $(this).click(function() {
+                        var rowID = $(this).data('contactrow');
+                        $('#' + rowID).remove();
+                    });
+                });
+                newRowClone.find('.contactInfoNewRowValueField').each(function() {
+                    $(this).attr('name', 'contactInfoNew_' + newRowCnt);
+                    $(this).attr('id', 'contactInfoNew_' + newRowCnt);
+                });
+                newRowClone.find('.contactInfoNewRowRadio').each(function() {
+                    $(this).val('contactInfoNew_' + newRowCnt);
+                });
+
+                newRowClone.appendTo("#addContactContainer");
+
+            });
+
+            $('.deleteNewContactButton').click(function() {
+                var rowID = $(this).data('contactrow');
+                $('#' + rowID).remove();
+            });
+
+            $('.deleteExistingContactButton').click(function() {
+                var contactInfoID = $(this).data('contactrow');
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/contactInfo/delete/' + contactInfoID,
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: {},
+                    success: function() {
+                        $('#contactInfoExRow_' + contactInfoID).remove();
+                    }
+                });
+            });
+
+            $('#addAddress').click(function(event) {
+                event.preventDefault();
+
+                var addressInfoCnt = $('#addressInfoRowCnt');
+                var newAddresRowCnt = 1;
+                var currAddresRowCnt = 1;
+                if (addressInfoCnt) {
+                    currAddresRowCnt = parseInt(addressInfoCnt.val());
+                    console.log('currAddresRowCnt: ' + currAddresRowCnt);
+                    newAddresRowCnt = currAddresRowCnt + 1;
+                    console.log('newAddresRowCnt: ' + newAddresRowCnt);
+                    addressInfoCnt.val(newAddresRowCnt);
+                }
+
+                var newAddressRowClone = $('#addressInfoNewRow_' + currAddresRowCnt).clone();
+
+                newAddressRowClone.attr('id', 'addressInfoNewRow_' + newAddresRowCnt);
+                newAddressRowClone.find('.deleteNewAddressButton').each(function() {
+                    $(this).attr('data-addressrow', 'addressInfoNewRow_' + newAddresRowCnt);
+                    $(this).click(function() {
+                        var rowID = $(this).data('addressrow');
+                        $('#' + rowID).remove();
+                    });
+                });
+                newAddressRowClone.find('.addressInfoNewRowAddress1').each(function() {
+                    $(this).attr('name', 'addressInfoNewRow_address1_' + newAddresRowCnt);
+                    $(this).attr('id', 'addressInfoNewRow_address1_' + newAddresRowCnt);
+                });
+                newAddressRowClone.find('.addressInfoNewRowAddress2').each(function() {
+                    $(this).attr('name', 'addressInfoNewRow_address2_' + newAddresRowCnt);
+                    $(this).attr('id', 'addressInfoNewRow_address2_' + newAddresRowCnt);
+                });
+                newAddressRowClone.find('.addressInfoNewRowRadio').each(function() {
+                    $(this).val('addressInfoNew_' + newAddresRowCnt);
+                });
+
+                newAddressRowClone.appendTo("#addAddressContainer");
+            });
+
+            $('.deleteNewAddressButton').click(function() {
+                var rowID = $(this).data('addressrow');
+                $('#' + rowID).remove();
+            });
+
+            $('.deleteExistingAddressButton').click(function() {
+                var addressInfoID = $(this).data('addressrow');
+                $.ajax({
+                    type: 'GET',
+                    url: '/api/addressInfo/delete/' + addressInfoID,
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: {},
+                    success: function() {
+                        $('#addressInfoExistingRow_' + addressInfoID).remove();
+                    }
+                });
+            });
+        });
+    </script>
+
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>Employee Details</h2>
+
+    <form th:object="${employee}" th:action="@{/employee/save}" method="post">
+
+        <div class="row">
+            <div class="col-sm">
+                <input type="hidden" th:field="*{employeeID}" />
+                <div class="form-group">
+                    <label>First Name</label>
+                    <input type="text" th:field="*{firstName}" class="form-control" placeholder="First Name">
+                </div>
+                <div class="form-group">
+                    <label>Last Name</label>
+                    <input type="text" th:field="*{lastName}" class="form-control" placeholder="Last Name">
+                </div>
+                <div class="form-group">
+                    <label>Middle Name</label>
+                    <input type="text" th:field="*{middleName}" class="form-control" placeholder="Last Name">
+                </div>
+                <div class="form-group">
+                    <label>Birth Date</label>
+                    <input type="date" id="birthDate" name="birthDate" th:value="*{birthDate}" class="form-control" placeholder="Birth Date">
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <select th:field="*{gender}" class="form-control">
+                        <option value=""></option>
+                        <option th:value="M" th:text="Male"></option>
+                        <option th:value="F" th:text="Female"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Marital Status</label>
+                    <select th:field="*{maritalStatus}" class="form-control">
+                        <option value=""></option>
+                        <option th:value="Single" th:text="Single"></option>
+                        <option th:value="Married" th:text="Married"></option>
+                        <option th:value="Divorced" th:text="Divorced"></option>
+                        <option th:value="Separated" th:text="Separated"></option>
+                        <option th:value="Widowed" th:text="Widowed"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Position</label>
+                    <input type="text" th:field="*{position}" class="form-control" placeholder="Position">
+                </div>
+                <div class="form-group">
+                    <label>Date Hired</label>
+                    <input type="date" id="dateHired" name="dateHired" th:value="*{dateHired}" class="form-control" placeholder="Date Hired">
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="container" id="addContactContainer">
+                    <h5>Contact Details</h5>
+                    <a href="#" id="addContact">Add New Contact</a>
+                    <input type="hidden" id="contactInfoRowCnt" value="1">
+                    <div class="row" style="margin: 10px;">
+                        <div class="col-sm">Value</div>
+                        <div class="col-sm">Primary?</div>
+                    </div>
+                    <div class="row" th:each="contactInfo : ${employee.contactInfoDTOList}" th:id="${'contactInfoExRow_' + contactInfo.contactInfoID}" style="margin: 10px;">
+                        <div class="col-sm">
+                            <input type="text" th:name="${'contactInfo_' + contactInfo.contactInfoID}" th:value="${contactInfo.value}">
+                        </div>
+                        <div class="col-sm">
+                            <input class="form-check-input" type="radio" name="primaryContact" th:value="${contactInfo.contactInfoID}" th:checked="${contactInfo.primary}" style="margin-left: 10px;">
+                            <button type="button" class="btn btn-danger btn-sm deleteExistingContactButton" th:attr="data-contactrow=${contactInfo.contactInfoID}" style="margin-left: 40px;">X</button>
+                        </div>
+                    </div>
+                    <div class="row" th:id="contactInfoNewRow_1" style="margin: 10px;">
+                        <div class="col-sm">
+                            <input type="text" class="contactInfoNewRowValueField" name="contactInfoNew_1" id="contactInfoNew_1" value="">
+                        </div>
+                        <div class="col-sm">
+                            <input class="form-check-input contactInfoNewRowRadio" type="radio" name="primaryContact" value="contactInfoNew_1" style="margin-left: 10px;">
+                            <button type="button" class="btn btn-danger btn-sm deleteNewContactButton" style="margin-left: 40px;" data-contactrow="contactInfoNewRow_1">X</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="container" id="addAddressContainer">
+                    <h5>Address Info</h5>
+                    <input type="hidden" id="addressInfoRowCnt" value="1">
+                    <a href="#" id="addAddress">Add New Address</a>
+                    <div class="row" style="margin: 10px;">
+                        <div class="col-sm-5">Address 1</div>
+                        <div class="col-sm-5">Address 2</div>
+                        <div class="col-sm-2">Primary?</div>
+                    </div>
+                    <div class="row" th:each="addressInfo : ${employee.addressInfoDTOList}" th:id="${'addressInfoExistingRow_' + addressInfo.addressInfoID}" style="margin: 10px;">
+                        <div class="col-sm-5">
+                            <input type="text" th:name="${'addressInfo_address1_' + addressInfo.addressInfoID}" th:value="${addressInfo.address1}">
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" th:name="${'addressInfo_address2_' + addressInfo.addressInfoID}" th:value="${addressInfo.address2}">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-check-input" type="radio" name="primaryAddress" th:value="${addressInfo.addressInfoID}" th:checked="${addressInfo.primary}" style="margin-left: 5px;">
+                            <button type="button" class="btn btn-danger btn-sm deleteExistingAddressButton" th:attr="data-addressrow=${addressInfo.addressInfoID}" style="float: right;">X</button>
+                        </div>
+                    </div>
+                    <div class="row" id="addressInfoNewRow_1" style="margin: 10px;">
+                        <div class="col-sm-5">
+                            <input type="text" class="addressInfoNewRowAddress1" name="addressInfoNewRow_address1_1" id="addressInfoNewRow_address1_1">
+                        </div>
+                        <div class="col-sm-5">
+                            <input type="text" class="addressInfoNewRowAddress2" name="addressInfoNewRow_address2_1" id="addressInfoNewRow_address2_1">
+                        </div>
+                        <div class="col-sm-2">
+                            <input class="form-check-input addressInfoNewRowRadio" type="radio" name="primaryAddress" value="addressInfoNewRow_1" style="margin-left: 5px;">
+                            <button type="button" class="btn btn-danger btn-sm deleteNewAddressButton" style="float: right;" data-addressrow="addressInfoNewRow_1">X</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-default">Submit</button>
+    </form>
+
+</div>
+
+</body>
+</html>
