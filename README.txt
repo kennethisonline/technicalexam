@@ -4,7 +4,7 @@ NOTES:
 - Your db user must have authorization to create and update tables
 - Property spring.jpa.hibernate.ddl-auto is set 'update', which should take care of DDL and creation of tables
 - As this is packaged as a Spring Boot app with embedded Tomcat, to run, just invoke the following on the command line:
-java -jar technicalexam-0.0.1-SNAPSHOT
+java -jar technicalexam-0.0.1-SNAPSHOT.jar
 - The app listens on port 8080, so please make sure it is not used before running the app.
 
 Tech Stack:
@@ -13,5 +13,5 @@ Tech Stack:
 - Spring Security
 - Spring Data JPA using Hibernate implementation of JPA
 - MySQL
-- Thymeleaf templates
+- Thymeleaf templates with Bootstrap CSS
 - jQuery
