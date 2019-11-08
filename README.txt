@@ -5,3 +5,4 @@ NOTES:
 - Property spring.jpa.hibernate.ddl-auto is set 'update', which should take care of DDL and creation of tables
 - As this is packaged as a Spring Boot app with embedded Tomcat, to run, just invoke the following on the command line:
 java -jar technicalexam-0.0.1-SNAPSHOT
+- The app listens on port 8080, so please make sure it is not used before running the app.
