@@ -6,3 +6,12 @@ NOTES:
 - As this is packaged as a Spring Boot app with embedded Tomcat, to run, just invoke the following on the command line:
 java -jar technicalexam-0.0.1-SNAPSHOT
 - The app listens on port 8080, so please make sure it is not used before running the app.
+
+Tech Stack:
+- Java 8
+- Spring Boot, MVC, Rest Controllers
+- Spring Security
+- Spring Data JPA using Hibernate implementation of JPA
+- MySQL
+- Thymeleaf templates
+- jQuery
