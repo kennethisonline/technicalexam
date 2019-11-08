@@ -89,8 +89,11 @@ public class EmployeeListItemDTO {
             Period period = Period.between(dateHired, LocalDate.now());
             int years = period.getYears();
             int months = period.getMonths();
-            if (months != 0) {
+            if (months != 0 && years != 0) {
                 return years + "y " + months + "m";
+            }
+            else if (months != 0 && years == 0) {
+                return months + "m";
             }
             else {
                 return years + "y";

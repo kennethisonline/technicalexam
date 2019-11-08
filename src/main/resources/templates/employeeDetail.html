@@ -139,13 +139,13 @@
 
     <h2>Employee Details</h2>
 
-    <div style="margin: 10px;">
-        <button th:if="${isAdmin} == true" type="submit" class="btn btn-primary">Save</button>
-        <a th:if="${isAdmin} == true" th:href="${'/employee/delete/' + employee.employeeID}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
-        <a href="/employees" class="btn btn-primary" role="button" aria-pressed="true">Back to Employees</a>
-    </div>
-
     <form th:object="${employee}" th:action="@{/employee/save}" method="post">
+
+        <div style="margin: 10px;">
+            <button th:if="${isAdmin} == true" type="submit" class="btn btn-primary">Save</button>
+            <a th:if="${isAdmin == true and employee.employeeID != null}" th:href="${'/employee/delete/' + employee.employeeID}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
+            <a href="/employees" class="btn btn-primary" role="button" aria-pressed="true">Back to Employees</a>
+        </div>
 
         <div class="row">
             <div class="col-sm">
@@ -261,7 +261,7 @@
 
         <div style="margin: 10px;">
             <button th:if="${isAdmin} == true" type="submit" class="btn btn-primary">Save</button>
-            <a th:if="${isAdmin} == true" th:href="${'/employee/delete/' + employee.employeeID}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
+            <a th:if="${isAdmin == true and employee.employeeID != null}" th:href="${'/employee/delete/' + employee.employeeID}" class="btn btn-danger" role="button" aria-pressed="true">Delete</a>
             <a href="/employees" class="btn btn-primary" role="button" aria-pressed="true">Back to Employees</a>
         </div>
     </form>

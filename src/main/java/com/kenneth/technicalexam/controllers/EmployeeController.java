@@ -70,6 +70,12 @@ public class EmployeeController {
     @GetMapping("/employee/new")
     public String newEmployee(Model model) {
         model.addAttribute("employee", new EmployeeDetailDTO());
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(r -> r.getAuthority().equals("ROLE_ADMIN") || r.getAuthority().equals("ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+
         return "employeeDetail";
     }
 
@@ -93,11 +99,6 @@ public class EmployeeController {
 
     @PostMapping("/employee/save")
     public RedirectView saveEmployee(EmployeeDetailDTO employeeDTO, Model model, @RequestParam Map<String,String> otherFields) {
-        if (otherFields != null) {
-            otherFields.entrySet().stream()
-                    .forEach(e -> System.out.println("Key: " + e.getKey() + ", Val: " + e.getValue()));
-        }
-
         Employee employee = new Employee();
         employeeDTO.updateEmployeeModel(employee);
 
